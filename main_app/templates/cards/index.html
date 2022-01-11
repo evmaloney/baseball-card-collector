@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h1>Baseball Card List</h1>
+
+{% for card in cards %}
+<div class="card">
+  <div class="card-content">
+    <span class="card-title">{{ card.name }}</span>
+    <p>Position: {{ card.position }}</p>
+    <p>Card Brand: {{ card.brand}}</p>
+    <p>Year: {{ card.year }}</p>
+  </div>
+</div>
+{% endfor %}
+
+{% endblock %}
