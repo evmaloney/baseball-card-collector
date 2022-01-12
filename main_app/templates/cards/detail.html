@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h1>Baseball Card Details</h1>
+
+<div class="card">
+  <div class="card-content">
+    <span class="card-title">{{ card.name }}</span>
+    <p>Position: {{ card.position }}</p>
+    {% if card.seasons > 0 %}
+      <p>Years in Mlb: {{ card.seasons }}</p>
+    {% else %}
+      <p>Rookie Card</p>
+    {% endif %}
+    <p>Card Brand: {{ card.brand }}</p>
+    <p>Year: {{ card.year }}</p>
+  </div>
+</div>
+
+{% endblock %}

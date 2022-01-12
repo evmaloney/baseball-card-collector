@@ -1,27 +1,21 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from .models import Card
 
-class Card:
-  def __init__(self, name, position, brand, year):
-    self.name = name
-    self.position = position
-    self.brand = brand
-    self.year = year
 
-cards = [
-  Card('Ken Griffey Jr.', 'CF', 'Topps', 1996),
-  Card('Mark McGwire', '1B', 'Upper Deck', 1989),
-  Card('Mariano Rivera', 'RP', 'Topps', 2001)
-]
 # Create your views here.
-
-
 def home(request):
-    return HttpResponse('<h1>hey</h1>')
+    return render(request, 'home.html')
 
 
 def about(request):
     return render(request, 'about.html')
 
+
 def cards_index(request):
-  return render(request, 'cards/index.html', { 'cards': cards })
+    cards = Card.objects.all()
+    return render(request, 'cards/index.html', {'cards': cards})
+
+
+def cards_detail(request, card_id):
+    card = Card.objects.get(id=card_id)
+    return render(request, 'cards/detail.html', {'card': card})
