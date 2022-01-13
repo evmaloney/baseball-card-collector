@@ -15,6 +15,10 @@
     <p>Card Brand: {{ card.brand }}</p>
     <p>Year: {{ card.year }}</p>
   </div>
+  <div class="card-action">
+    <a href="{% url 'cards_update' card.id %}">Edit</a>
+    <a href="{% url 'cards_delete' card.id %}">Delete</a>
+  </div>
 </div>
 
 {% endblock %}
