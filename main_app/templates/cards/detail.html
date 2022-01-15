@@ -3,22 +3,53 @@
 
 <h1>Baseball Card Details</h1>
 
-<div class="card">
-  <div class="card-content">
-    <span class="card-title">{{ card.name }}</span>
-    <p>Position: {{ card.position }}</p>
-    {% if card.seasons > 0 %}
-      <p>Years in Mlb: {{ card.seasons }}</p>
-    {% else %}
-      <p>Rookie Card</p>
-    {% endif %}
-    <p>Card Brand: {{ card.brand }}</p>
-    <p>Year: {{ card.year }}</p>
+<div class="row">
+  <div class="col s6">
+    <div class="card">
+      <div class="card-content">
+        <span class="card-title">{{ card.name }}</span>
+        <p>Position: {{ card.position }}</p>
+        {% if card.seasons > 0 %}
+          <p>Years in Mlb: {{ card.seasons }}</p>
+        {% else %}
+          <p>Rookie Card</p>
+        {% endif %}
+        <p>Card Brand: {{ card.brand }}</p>
+        <p>Year: {{ card.year }}</p>
+      </div>
+      <div class="card-action">
+        <a href="{% url 'cards_update' card.id %}">Edit</a>
+        <a href="{% url 'cards_delete' card.id %}">Delete</a>
+      </div>
+    </div>
   </div>
-  <div class="card-action">
-    <a href="{% url 'cards_update' card.id %}">Edit</a>
-    <a href="{% url 'cards_delete' card.id %}">Delete</a>
+  <div class="col s6">
+    <form action="{% url 'add_winner' card.id %}" method="POST">
+      {% csrf_token %}
+      {{ winner_form.as_p }}
+      <input type="submit" class="btn" value="Add Award">
+    </form>
+    <table class="striped">
+      <thead>
+        <tr><th>Year</th><th>League</th><th>Award</th></tr>
+      </thead>
+      <tbody>
+        {% for winner in card.winner_set.all %}
+          <tr>
+            <td>{{winner.year}}</td>
+            <td>{{winner.get_league_display}}</td>
+            <td>{{winner.get_award_display}}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
   </div>
 </div>
 
+<script>
+  const leagueEl = document.getElementById('id_league');
+  M.FormSelect.init(leagueEl)
+  const awardEl = document.getElementById('id_award');
+  M.FormSelect.init(awardEl)
+</script>
 {% endblock %}

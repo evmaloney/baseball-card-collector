@@ -40,9 +40,10 @@ class Winner(models.Model):
         choices=AWARDS,
         default=AWARDS[0][0]
     )
-
     card = models.ForeignKey(Card, on_delete=models.CASCADE)
 
     def __str__(self):
         return f"{self.year} {self.get_league_display()} {self.get_award_display()}"
 
+    class Meta:
+        ordering = ['-year']

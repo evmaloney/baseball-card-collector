@@ -1,6 +1,7 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from .models import Card
+from .forms import WinnerForm
 
 
 class CardCreate(CreateView):
@@ -36,4 +37,17 @@ def cards_index(request):
 
 def cards_detail(request, card_id):
     card = Card.objects.get(id=card_id)
-    return render(request, 'cards/detail.html', {'card': card})
+    winner_form = WinnerForm()
+    return render(request, 'cards/detail.html', {
+        'card': card,
+        'winner_form': winner_form
+    })
+
+
+def add_winner(request, card_id):
+    form = WinnerForm(request.POST)
+    if form.is_valid():
+        new_winner = form.save(commit=False)
+        new_winner.card_id = card_id
+        new_winner.save()
+    return redirect('detail', card_id=card_id)
