@@ -10,9 +10,9 @@
         <span class="card-title">{{ card.name }}</span>
         <p>Position: {{ card.position }}</p>
         {% if card.seasons > 0 %}
-          <p>Years in Mlb: {{ card.seasons }}</p>
+        <p>Years in MLB: {{ card.seasons }}</p>
         {% else %}
-          <p>Rookie Card</p>
+        <p>Rookie Card</p>
         {% endif %}
         <p>Card Brand: {{ card.brand }}</p>
         <p>Year: {{ card.year }}</p>
@@ -29,23 +29,73 @@
       {{ winner_form.as_p }}
       <input type="submit" class="btn" value="Add Award">
     </form>
+    <br>
+    {% if card.should_get_case %}
+    <div class="card-panel red-text center-align">This {{card.name}} Rookie card may have a high value. You should protect it with several different cases.</div>
+    {% else %}
+    <div class="card-panel teal-text center-align">This {{card.name}} card is probably not very valuable. A simple case will do.</div>
+    {% endif %}
     <table class="striped">
       <thead>
-        <tr><th>Year</th><th>League</th><th>Award</th></tr>
+        <tr>
+          <th>Year</th>
+          <th>League</th>
+          <th>Award</th>
+        </tr>
       </thead>
       <tbody>
         {% for winner in card.winner_set.all %}
-          <tr>
-            <td>{{winner.year}}</td>
-            <td>{{winner.get_league_display}}</td>
-            <td>{{winner.get_award_display}}</td>
-          </tr>
+        <tr>
+          <td>{{winner.year}}</td>
+          <td>{{winner.get_league_display}}</td>
+          <td>{{winner.get_award_display}}</td>
+        </tr>
         {% endfor %}
       </tbody>
     </table>
   </div>
 </div>
-
+<hr>
+<div class="row">
+  <div class="col s6">
+    <h3>{{ card.name }}'s Cases</h3>
+    {% if card.cases.count %}
+      {% for case in card.cases.all %}
+        <div class="card">
+          <div class="card-content">
+            <span class="card-title">
+              A <span style="material: {{ case.material }}">{{ case.get_material_display }}</span> {{ case.type }}
+            </span>
+          </div>
+        </div>
+      {% endfor %}
+    {% else %}
+      <h5>No Cases :(</h5>
+    {% endif %}
+  </div>
+  <div class="col s6">
+    <h3>Available Cases</h3>
+    {% if cases.count %}
+      {% for case in cases.all %}
+        <div class="card">
+          <div class="card-content">
+            <span class="card-title">
+              A <span style="material: {{ case.material }}">{{ case.get_material_display }}</span> {{ case.type }}
+            </span>
+          </div>
+          <div class="card-action">
+            <form action="{% url 'assoc_case' card.id case.id %}" method="POST">
+              {% csrf_token %}
+              <button type="submit" class="btn">Add</button>
+            </form>
+          </div>
+        </div>
+      {% endfor %}
+    {% else %}
+      <h5>This {{card.name}} Card Already Has All Cases Available</h5>
+    {% endif %}
+  </div>
+</div>
 <script>
   const leagueEl = document.getElementById('id_league');
   M.FormSelect.init(leagueEl)

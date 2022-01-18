@@ -1,6 +1,11 @@
 from django.db import models
 from django.urls import reverse
 
+MATERIALS = (
+    ('P', 'Plastic'),
+    ('G', 'Glass')
+)
+
 LEAGUES = (
     ('NL', 'National League'),
     ('AL', 'American League')
@@ -11,7 +16,23 @@ AWARDS = (
     ('CY', 'Cy Young'),
     ('ROTY', 'Rookie of the Year')
 )
+
 # Create your models here.
+
+
+class Case(models.Model):
+    type = models.CharField(max_length=100)
+    material = models.CharField(
+        max_length=1,
+        choices=MATERIALS,
+        default=MATERIALS[0][0]
+    )
+
+    def __str__(self):
+        return self.type
+
+    def get_absolute_url(self):
+        return reverse('cases_detail', kwargs={'pk': self.id})
 
 
 class Card(models.Model):
@@ -20,12 +41,16 @@ class Card(models.Model):
     seasons = models.IntegerField()
     brand = models.CharField(max_length=100)
     year = models.IntegerField()
+    cases = models.ManyToManyField(Case)
 
     def __str__(self):
         return self.name
 
     def get_absolute_url(self):
         return reverse('detail', kwargs={'card_id': self.id})
+
+    def should_get_case(self):
+        return self.seasons == 0
 
 
 class Winner(models.Model):
